@@ -18,6 +18,7 @@ Before you begin, ensure you have the following installed:
 * **Git:** (Optional, for cloning if the project is in a Git repository)
 
 ## Project Structure
+```
 toxic_comment_filter/
 ├── api/                            # Contains the FastAPI application
 │   ├── main.py                     # FastAPI application code
@@ -34,7 +35,7 @@ toxic_comment_filter/
     ├── package.json
     ├── package-lock.json
     ├── webpack.config.cjs
-
+```
 
 ## I. Backend (FastAPI) Setup
 
