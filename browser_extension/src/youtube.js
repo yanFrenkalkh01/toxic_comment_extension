@@ -28,34 +28,25 @@ async function processTextWithAPI(originalText, spanNodeToUpdate) {
             console.error(`API Error: ${response.status} ${response.statusText}. Response: ${errorText}`);
             // Display an error message or revert to original text
             spanNodeToUpdate.textContent = `[Error: API ${response.status}]`;
-            // Alternatively, to revert: spanNodeToUpdate.textContent = originalText;
             return;
         }
 
         const data = await response.json();
 
-        // --- Adjust based on your API's response structure ---
-        // Example 1: API returns { "processed_text": "new text" }
         if (data && typeof data.processed_text === 'string') {
             spanNodeToUpdate.textContent = data.processed_text;
             console.log(`API Response for "${originalText.substring(0, 30)}...": "${data.processed_text}"`);
         }
-        // Example 2: API returns { "label": "FLAGGED", "original_text": "..." }
-        // else if (data && data.label) {
-        //     spanNodeToUpdate.textContent = `[${data.label}]`;
-        // }
         else {
             console.error("API response format unexpected:", data);
             spanNodeToUpdate.textContent = "[Error: Invalid API Response Format]";
         }
-        // --- End of API response structure adjustment ---
 
     } catch (error) {
-        // Handle network errors (e.g., API server down) or other issues with fetch
+        // Handle network errors 
         console.error("Error calling API:", error);
         // Display an error message or revert to original text
         spanNodeToUpdate.textContent = "[Error: Network/Fetch Failed]";
-        // Alternatively, to revert: spanNodeToUpdate.textContent = originalText;
     }
 }
 
@@ -80,12 +71,10 @@ async function handleNewTargetSpanAppeared(spanNode) {
         return;
     }
 
-    // Generate a unique ID for logging/debugging if needed
     let elementId = spanNode.getAttribute('data-sim-id') ||
                     spanNode.id ||
                     `dyn-span-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 
-    // Optional: Try to get a more stable comment ID from YouTube's structure
     const commentViewModel = spanNode.closest('ytd-comment-view-model');
     if (commentViewModel) {
         const timeLink = commentViewModel.querySelector('#published-time-text a');
@@ -105,7 +94,7 @@ async function handleNewTargetSpanAppeared(spanNode) {
     console.log(`Target span detected (ID: ${elementId}). Original text: "${originalText.substring(0, 100)}..."`);
 
     // Set placeholder text immediately while waiting for the API
-    const initialSpanHeight = spanNode.offsetHeight; // Optional: try to preserve height
+    const initialSpanHeight = spanNode.offsetHeight; 
     spanNode.textContent = PLACEHOLDER_TEXT;
     if (PLACEHOLDER_TEXT === "" && initialSpanHeight > 0) { // Attempt to prevent collapse if placeholder is empty
         spanNode.style.minHeight = `${initialSpanHeight}px`;
@@ -119,8 +108,6 @@ async function handleNewTargetSpanAppeared(spanNode) {
     if (PLACEHOLDER_TEXT === "" && initialSpanHeight > 0) {
         spanNode.style.minHeight = '';
     }
-    // Note: PROCESSED_ATTRIBUTE remains to prevent re-processing.
-    // If you want to allow re-processing (e.g., on edit), you'd need more complex logic.
 }
 
 // Configuration for the observer:
